@@ -1,0 +1,272 @@
+
+.moving-image {
+    position: absolute;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+       
+}
+.moving-image> img{
+    
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    object-fit: cover;      
+}
+.animations-container{
+    position: relative;
+}
+.puente {
+    position: absolute;
+    top: -135px;
+    left: 30px;
+    
+}
+
+.bocadillo {
+    visibility: hidden;
+    position: absolute; 
+    left: 50px;
+    top: -80px;
+    width: 304px;
+    height: 120px;
+    background-color: #e54f4f;
+    border-radius: 10px;
+    border: 1px solid black;
+    color: white;
+  }
+  
+  .triangulo {
+    position: absolute;
+    top: 50%;
+    left: -20px; /* Distancia del triángulo al borde izquierdo */
+    margin-top: -10px; /* Mitad de la altura del triángulo */
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #1d1d1d; /* Color del triángulo igual al del fondo del rectángulo */
+  }
+  
+  .rectangulo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+height: 100%;
+  }
+
+  .rectangulo img {
+    margin: 5px;
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+    
+}
+#iniciar {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    
+}
+#iniciar-logo {
+    font-size: 60px;
+}
+#iniciar-players{
+    display: flex;
+    
+}
+#players-number{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-name-edit{
+    display: flex;
+    flex-direction: column;
+}
+#start{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    visibility: hidden;
+}
+#wrapper {
+    display: none;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+#tablero-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+#panel{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+
+.dice{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+  
+}
+.dice-roll{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+.tirada {
+    text-align: center;
+    background-color: rgb(225, 76, 76);
+    font-size: 40px;
+    color: white;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+
+}
+
+#player-turns {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    column-gap: 20px;
+    width: 100%;
+}
+
+.player{
+    display: flex;
+    flex-direction: row;   
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+.player-name-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(29, 29, 29);
+    border-radius: 20px;
+    color: white;
+    font-weight: 500;
+    border: 2px solid #1d1d1d;
+}
+.player-image{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover ;
+}
+
+.player-edition {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* EDICION JUGADOR*/
+
+.image-selector {
+    display: grid;
+    grid-template-columns: auto auto;
+   row-gap: 5px;
+   column-gap: 10px;
+    justify-content: flex-start;
+}
+.image-selector img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+
+input[type="radio"] {
+    display: none;
+}
+input[type="radio"]:checked + label {
+    outline: 5px solid red;
+    
+}
+
+fieldset {
+    border: 6px solid #1d1d1d;
+}
+button {
+    background-color: #1d1d1d;
+    color: white;
+    border-radius: 20px;
+    padding: 4px 15px ;
+    cursor: pointer;
+}
+
+#reglas{
+    background-color: rgb(240, 240, 240);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    
+}
+#reglas >div>div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgb(46, 46, 46);
+    color: white;
+    list-style-type: none;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    font-size: 20px;
+    width: 100%;
+    
+}
+
+#reglas h2{
+    font-size: 36px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
