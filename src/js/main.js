@@ -135,6 +135,9 @@ $(document).ready(function () {
     const bridges = [5, 11]
     const death = 57
 
+var animacioncasilla=200
+var animacioncierre=20
+
     // Clase para crear jugadores
     class Player {
         constructor(name, image, character,) {
@@ -147,9 +150,12 @@ $(document).ready(function () {
         }
 
         Move(n, reroll = false) {
+            //Esta variable la devolveremos en el return para calcular cuánto dura la animación de mover la ficha
+            var tiempoAnimacion = 0
             // En el caso que se vuelva a tirar, pasaremos directamente el numero de casilla en lugar de la tirada,
             // puesto que no hará falta recorrer una a una
             if (reroll == true) {
+                tiempoAnimacion = animacioncasilla
                 var coords = casillas[n]
                 var self = this
 
@@ -164,11 +170,11 @@ $(document).ready(function () {
                     top: centroids[1] - 15,
                     scale: 3
                 }, {
-                    duration: 700,
+                    duration: animacioncasilla,
                     complete: function () {
                         $('#ficha' + self.name).animate({
                             scale: 1
-                        }, 200)
+                        }, animacioncierre)
                     }
                 });
                 //Actualizamos el reroll a false y la posición actual
@@ -181,6 +187,7 @@ $(document).ready(function () {
                 if (this.position + n > 62) {
                     var restante = this.position + n - 62
                     for (var i = this.position; i <= 62; i++) {
+                        tiempoAnimacion += animacioncasilla
                         var coords = casillas[i]
                         // Si es rectángulo
                         if (coords.length == 4) {
@@ -193,15 +200,16 @@ $(document).ready(function () {
                             top: centroids[1] - 15,
                             scale: 3
                         }, {
-                            duration: 700,
+                            duration: animacioncasilla,
                             complete: function () {
                                 $('#ficha' + self.name).animate({
                                     scale: 1
-                                }, 200)
+                                }, animacioncierre)
                             }
                         });
                     }
                     for (var i = 62; i > 62 - restante - 1; i--) {
+                        tiempoAnimacion += animacioncasilla
                         var coords = casillas[i]
                         // Si es rectángulo
                         if (coords.length == 4) {
@@ -217,11 +225,11 @@ $(document).ready(function () {
                             top: centroids[1] - 15,
                             scale: 3
                         }, {
-                            duration: 700,
+                            duration: animacioncasilla,
                             complete: function () {
                                 $('#ficha' + self.name).animate({
                                     scale: 1
-                                }, 200)
+                                }, animacioncierre)
                             }
                         });
 
@@ -229,10 +237,11 @@ $(document).ready(function () {
                     this.position = i + 1
 
                 } else {
+
                     for (var i = this.position; i < this.position + n; i++) {
 
                         var coords = casillas[i + 1]
-
+                        tiempoAnimacion += animacioncasilla
                         // Guardamos una referencia al objeto actual
                         var self = this;
                         // Si es rectángulo
@@ -249,16 +258,20 @@ $(document).ready(function () {
                             top: centroids[1] - 15,
                             scale: 3
                         }, {
-                            duration: 700,
+                            duration: animacioncasilla,
                             complete: function () {
                                 $('#ficha' + self.name).animate({
                                     scale: 1
-                                }, 50)
+                                }, animacioncierre)
                             }
                         });
 
+
                     }
+
                     this.position += n
+
+
                 }
 
 
@@ -266,12 +279,10 @@ $(document).ready(function () {
 
             }
 
-            return true
+            return [true, tiempoAnimacion]
 
         }
-        RollDice() {
-            var tirada = dice.roll();
-        }
+
     }
 
 
@@ -290,12 +301,12 @@ $(document).ready(function () {
                 jugador.personajeurl = $(this).find('input[type="radio"]:checked').val();
                 jugador.personaje = $(this).find('input[type="radio"]:checked').attr('character');
                 jugadores.push(jugador);
-               console.log(jugador)
+                console.log(jugador)
             }
         });
         // Crear jugadores
         var separador = 0;
-       
+
         jugadores.forEach(jugador => {
             $('#player-turns').append(
                 "<div class='player' id='" + jugador.nombre + "'>" +
@@ -319,61 +330,61 @@ $(document).ready(function () {
             //Crear fichas de cada jugador
             $('#tablero-container').append(
                 "<div class='moving-image' id='ficha" + jugador.nombre + "'>" +
-                    "<img src='" + jugador.personajeurl + "' width='30'>" +
-                    "<div class='animations-container'>"+
-                        "<div id='puente"+jugador.nombre+"' class='bocadillo' >"+
-                        "<div class='triangulo'></div>"+
-                            "<div class='rectangulo'>"+
-                                "<img src='./public/images/"+jugador.personaje+"/puente.jpg'>" +
-                                "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>"+
-                                    "<h2 style='margin:0'>¡De Puente a Puente!</h2>"+
-                                    "<span>y tiro porque me lleva la corriente</span>"+
-                                "</div>"+
-                            "</div>" +
-                        "</div>" +
-                        "<div id='oca"+jugador.nombre+"' class='bocadillo' >"+
-                        "<div class='triangulo'></div>"+
-                            "<div class='rectangulo'>"+
-                                "<img src='./public/images/"+jugador.personaje+"/puente.jpg'>" +
-                                "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>"+
-                                    "<h2 style='margin:0'>¡De Oca a OCa!</h2>"+
-                                    "<span>y tiro porque me toca</span>"+
-                                "</div>"+
-                            "</div>" +
-                        "</div>" +
-                        "<div id='death"+jugador.nombre+"' class='bocadillo' >"+
-                        "<div class='triangulo'></div>"+
-                            "<div class='rectangulo'>"+
-                                "<img src='./public/images/"+jugador.personaje+"/death.jpg'>" +
-                                "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>"+
-                                    "<h2 style='margin:0'>¡Vuelta a Empezar!</h2>"+
-                                    "<span>directo a la casilla de salida</span>"+
-                                "</div>"+
-                            "</div>" +
-                        "</div>" +
-                        "<div id='dados"+jugador.nombre+"' class='bocadillo' >"+
-                        "<div class='triangulo'></div>"+
-                            "<div class='rectangulo'>"+
-                                "<img src='./public/images/"+jugador.personaje+"/puente.jpg'>" +
-                                "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>"+
-                                    "<h2 style='margin:0'>¡Otra Tirada!</h2>"+
-                                    "<span>tengo otro turno para tirar</span>"+
-                                "</div>"+
-                            "</div>" +
-                        "</div>" +
-                    "</div>" +
+                "<img src='" + jugador.personajeurl + "' width='30'>" +
+                "<div class='animations-container'>" +
+                "<div id='puente" + jugador.nombre + "' class='bocadillo' >" +
+                "<div class='triangulo'></div>" +
+                "<div class='rectangulo'>" +
+                "<img src='./public/images/" + jugador.personaje + "/puente.jpg'>" +
+                "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>" +
+                "<h2 style='margin:0'>¡De Puente a Puente!</h2>" +
+                "<span>y tiro porque me lleva la corriente</span>" +
+                "</div>" +
+                "</div>" +
+                "</div>" +
+                "<div id='oca" + jugador.nombre + "' class='bocadillo' >" +
+                "<div class='triangulo'></div>" +
+                "<div class='rectangulo'>" +
+                "<img src='./public/images/" + jugador.personaje + "/puente.jpg'>" +
+                "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>" +
+                "<h2 style='margin:0'>¡De Oca a OCa!</h2>" +
+                "<span>y tiro porque me toca</span>" +
+                "</div>" +
+                "</div>" +
+                "</div>" +
+                "<div id='death" + jugador.nombre + "' class='bocadillo' >" +
+                "<div class='triangulo'></div>" +
+                "<div class='rectangulo'>" +
+                "<img src='./public/images/" + jugador.personaje + "/death.jpg'>" +
+                "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>" +
+                "<h2 style='margin:0'>¡Vuelta a Empezar!</h2>" +
+                "<span>directo a la casilla de salida</span>" +
+                "</div>" +
+                "</div>" +
+                "</div>" +
+                "<div id='dados" + jugador.nombre + "' class='bocadillo' >" +
+                "<div class='triangulo'></div>" +
+                "<div class='rectangulo'>" +
+                "<img src='./public/images/" + jugador.personaje + "/puente.jpg'>" +
+                "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>" +
+                "<h2 style='margin:0'>¡Otra Tirada!</h2>" +
+                "<span>tengo otro turno para tirar</span>" +
+                "</div>" +
+                "</div>" +
+                "</div>" +
+                "</div>" +
                 "</div>"
             )
-               
-               
 
-                $('#ficha' + jugador.nombre).css({
-                    "left": (200 + separador) + "px",
-                    "top": "695px"
-                })
+
+
+            $('#ficha' + jugador.nombre).css({
+                "left": (200 + separador) + "px",
+                "top": "695px"
+            })
             separador = separador + 50
             //Creamos las instancias de jugadores y las metemos en el array
-            jugadoresArray.push(new Player(jugador.nombre, jugador.personajeurl,jugador.personaje));
+            jugadoresArray.push(new Player(jugador.nombre, jugador.personajeurl, jugador.personaje));
         });
 
 
@@ -386,7 +397,8 @@ $(document).ready(function () {
     var turno = 0
     function turnos() {
 
-        var rollAgain = false;
+        var rollAgain = false; //Variable para saber si es necesario volver a tirar
+        var animationDuration = 0; //Variable que captura la duración de la animación del movimiento
 
         $(".dice").css("visibility", "hidden");
         $(".tirada").css("visibility", "hidden");
@@ -401,8 +413,9 @@ $(document).ready(function () {
             $("#tirada" + jugadoresArray[turno].name).css("visibility", "visible");
 
             var movimientoJugador = jugadoresArray[turno].Move(tirada);
+            animationDuration = movimientoJugador[1]
 
-            if (movimientoJugador) {
+            if (movimientoJugador[0]) {
                 if (ocas.includes(jugadoresArray[turno].position)) {
                     var index = ocas.indexOf(jugadoresArray[turno].position);
                     var siguienteCasilla = ocas[index + 1];
@@ -410,41 +423,55 @@ $(document).ready(function () {
 
                     setTimeout(() => {
                         $("#oca" + jugadoresArray[turno].name).css('visibility', 'visible')
-                    }, 5000);
-                    
+                    }, movimientoJugador[1]+200);
                     setTimeout(() => {
+                        $(".bocadillo").css("visibility", "hidden");
                         jugadoresArray[turno].Move(siguienteCasilla, reroll);
-                    }, 1000);
-                    
+
+                    }, movimientoJugador[1] + 2000);
+
                     rollAgain = true;
                 } else if (bridges.includes(jugadoresArray[turno].position)) {
                     var index = bridges.indexOf(jugadoresArray[turno].position);
                     var siguienteCasilla = (index == 0) ? bridges[1] : bridges[0];
                     var reroll = true;
+
                     setTimeout(() => {
+
                         $("#puente" + jugadoresArray[turno].name).css('visibility', 'visible')
-                    }, 1000);
-                    
+
+                    }, movimientoJugador[1]+200);
                     setTimeout(() => {
+                        $(".bocadillo").css("visibility", "hidden");
                         jugadoresArray[turno].Move(siguienteCasilla, reroll);
-                    }, 1000);
-                    
+
+                    }, movimientoJugador[1] + 2000);
+
+
                     rollAgain = true;
                 } else if (rerolls.includes(jugadoresArray[turno].position)) {
-                    $("#dados" + jugadoresArray[turno].name).css('visibility', 'visible')
+
                     setTimeout(() => {
-                        
-                    }, 1000);
+
+                        $("#dados" + jugadoresArray[turno].name).css('visibility', 'visible')
+                    }, movimientoJugador[1]+200);
                     rollAgain = true;
                 } else if (jugadoresArray[turno].position == 62) {
                     console.log("Has ganado");
                 } else if (jugadoresArray[turno].position === death) {
                     var reroll = true;
-                    $("#death" + jugadoresArray[turno].name).css('visibility', 'visible')
+
                     setTimeout(() => {
+
+                        $("#death" + jugadoresArray[turno].name).css('visibility', 'visible')
+
+                    }, movimientoJugador[1]+200);
+                    setTimeout(() => {
+                        $(".bocadillo").css("visibility", "hidden");
                         jugadoresArray[turno].Move(0, reroll);
-                    }, 1000);
-                    
+
+                    }, movimientoJugador[1] + 2000);
+
                 }
             }
 
@@ -452,17 +479,22 @@ $(document).ready(function () {
         });
 
         $("#" + jugadoresArray[turno].name + "roll").on("click", function () {
-            cambiarTurno(rollAgain);
+            setTimeout(() => {
+                cambiarTurno(rollAgain, animationDuration);
+            }, animationDuration);
+                
+   
+            
         });
     }
 
-    function cambiarTurno(rollAgain) {
+    function cambiarTurno(rollAgain, animationDuration) {
         // Si rollAgain es verdadero, llamamos a turnos() para que el jugador actual haga un nuevo lanzamiento.
         // De lo contrario, cambiamos al siguiente jugador.
         if (rollAgain) {
-            setTimeout(function () {
+            
                 turnos();
-            }, 2000);
+         
         } else {
             if (turno == jugadoresArray.length - 1) {
                 turno = 0;
@@ -470,9 +502,9 @@ $(document).ready(function () {
                 turno++;
             }
             // Una vez que se ha decidido el próximo turno, llamamos a turnos() para que el nuevo jugador pueda lanzar los dados.
-            setTimeout(function () {
+       
                 turnos();
-            }, 2000);
+         
 
         }
     }
