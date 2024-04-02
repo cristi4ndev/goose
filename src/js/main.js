@@ -130,13 +130,16 @@ $(document).ready(function () {
     });
 
     // Creamos otros arrays que contienen las posiciones de las casillas especiales
-    const ocas = [4, 8, 13, 17, 26, 31, 35, 40, 44, 49, 53, 58, 62]
+    const ocas = [4, 8, 13, 17, 22, 26, 31, 35, 40, 44, 49, 53, 58, 62]
     const rerolls = [25, 52]
     const bridges = [5, 11]
     const death = 57
+    // Variables para controlar la velocidad de las tiradas y animaciones
+    var animacioncasilla = 700
+    var animacioncierre = 200
+    var tiempoPrimeraAnimacion = 200
+    var tiempoSegundaAnimacion = 1500
 
-    var animacioncasilla = 200
-    var animacioncierre = 20
 
     // Clase para crear jugadores
     class Player {
@@ -146,6 +149,7 @@ $(document).ready(function () {
                 this.character = character,
                 this.image = image,
                 this.movs_number = 0
+            this.tiradas = 0
 
         }
 
@@ -321,6 +325,9 @@ $(document).ready(function () {
     var jugadoresArray = []
     $('#start-game').click(function (event) {
         event.preventDefault();
+        function Iniciar(){
+            
+        }
         $('.player-edition').each(function () {
             // Verificar si el fieldset padre está oculto para no contarlo
             if (!$(this).closest('fieldset').is(':hidden')) {
@@ -329,10 +336,10 @@ $(document).ready(function () {
                 jugador.personajeurl = $(this).find('input[type="radio"]:checked').val();
                 jugador.personaje = $(this).find('input[type="radio"]:checked').attr('character');
                 jugadores.push(jugador);
-                console.log(jugador)
+                
             }
         });
-        // Crear jugadores
+        // Crear jugadores físicamente en el tablero
         var separador = 0;
 
         jugadores.forEach(jugador => {
@@ -425,11 +432,11 @@ $(document).ready(function () {
     var turno = 0
     var posicion = 0
     function turnos() {
-        console.log("Turno: " + turno)
         console.log(jugadoresArray)
+        
         var rollAgain = false; //Variable para saber si es necesario volver a tirar
         var animationDuration = 0; //Variable que captura la duración de la animación del movimiento
-        
+
         $(".dice").css("visibility", "hidden");
         $(".tirada").css("visibility", "hidden");
         $(".bocadillo").css("visibility", "hidden");
@@ -452,27 +459,35 @@ $(document).ready(function () {
             $("#tirada" + jugadoresArray[turno].name).css("visibility", "visible");
 
             var movimientoJugador = jugadoresArray[turno].Move(tirada);
+            jugadoresArray[turno].tiradas++
             animationDuration = movimientoJugador[1]
 
             if (movimientoJugador[0]) {
                 //Cuando cae en la llegada
                 if (jugadoresArray[turno].position == 62) {
-                    rollAgain = false;
+                    rollAgain = true;
                     posicion += 1
                     console.log("Has ganado");
                     $('#ficha' + jugadoresArray[turno].name).hide()
+                    $('#results').css('visibility', 'visible')
                     $("#" + jugadoresArray[turno].name + "roll").css('visibility', 'hidden')
                     $("tbody").append(
                         "<tr>" +
                         "<td>" + posicion + "</td>" +
                         "<td>" + jugadoresArray[turno].name + "</td>" +
-                        "<td>" + jugadoresArray[turno].character + "</td>" +
+                        "<td><img src='" + jugadoresArray[turno].image + "'></td>" +
+                        "<td>" + jugadoresArray[turno].tiradas + "</td>" +
                         "<td>" + jugadoresArray[turno].movs_number + "</td>" +
                         "</tr>"
 
                     )
                     jugadoresArray.splice(turno, 1)
-                    //Cuando cae en la casilla de "muerte"
+                    if (jugadoresArray[turno] === jugadoresArray.length - 1) {
+                        rollAgain = false
+                    }
+                    
+                    
+                    
                 } else if (jugadoresArray[turno].position === death) {
 
                     var dead = true;
@@ -485,10 +500,10 @@ $(document).ready(function () {
                     setTimeout(() => {
                         $(".bocadillo").css("visibility", "hidden");
                         var muerte = jugadoresArray[turno].Move(0, dead);
-                        
+
                         animationDuration = muerte[1]
 
-                    }, animationDuration + 2000);
+                    }, animationDuration + tiempoSegundaAnimacion);
                     // Cuando cae en una oca
                 } else if (ocas.includes(jugadoresArray[turno].position)) {
 
@@ -506,24 +521,28 @@ $(document).ready(function () {
                         var ocaMov = jugadoresArray[turno].Move(siguienteCasilla, reroll);
                         animationDuration = ocaMov[1]
                         if (jugadoresArray[turno].position === 62) {
-                            rollAgain = false;
+
                             posicion += 1
                             console.log("Has ganado");
                             $('#ficha' + jugadoresArray[turno].name).hide()
+                            $('#results').css('visibility', 'visible')
                             $("#" + jugadoresArray[turno].name + "roll").css('visibility', 'hidden')
                             $("tbody").append(
                                 "<tr>" +
                                 "<td>" + posicion + "</td>" +
                                 "<td>" + jugadoresArray[turno].name + "</td>" +
-                                "<td>" + jugadoresArray[turno].character + "</td>" +
+                                "<td><img src='" + jugadoresArray[turno].image + "'></td>" +
+                                "<td>" + jugadoresArray[turno].tiradas + "</td>" +
                                 "<td>" + jugadoresArray[turno].movs_number + "</td>" +
                                 "</tr>"
 
                             )
                             jugadoresArray.splice(turno, 1)
-                            //Cuando cae en la casilla de "muerte"
+                            if (jugadoresArray[turno] === jugadoresArray.length - 1) {
+                                rollAgain = false
+                            }
                         }
-                    }, animationDuration + 2000);
+                    }, animationDuration + tiempoSegundaAnimacion);
 
 
 
@@ -540,14 +559,14 @@ $(document).ready(function () {
                         $("#" + jugadoresArray[turno].name + "roll").css('visibility', 'hidden')
                         $("#puente" + jugadoresArray[turno].name).css('visibility', 'visible')
 
-                    }, movimientoJugador[1] + 200);
+                    }, animationDuration + tiempoPrimeraAnimacion);
                     setTimeout(() => {
                         $("#" + jugadoresArray[turno].name + "roll").css('visibility', 'visible')
                         $(".bocadillo").css("visibility", "hidden");
                         var bridgeMov = jugadoresArray[turno].Move(siguienteCasilla, reroll);
                         animationDuration = bridgeMov[1]
 
-                    }, animationDuration + 2000);
+                    }, animationDuration + tiempoSegundaAnimacion);
 
 
                     rollAgain = true;
@@ -557,7 +576,7 @@ $(document).ready(function () {
                         $("#" + jugadoresArray[turno].name + "roll").css('visibility', 'hidden')
                         $("#dados" + jugadoresArray[turno].name).css('visibility', 'visible')
 
-                    }, animationDuration + 200);
+                    }, animationDuration + tiempoPrimeraAnimacion);
 
 
                     setTimeout(() => {
@@ -565,7 +584,7 @@ $(document).ready(function () {
                         $(".bocadillo").css("visibility", "hidden");
 
 
-                    }, animationDuration + 2000);
+                    }, animationDuration + tiempoSegundaAnimacion);
                     rollAgain = true;
 
                 }
@@ -576,36 +595,59 @@ $(document).ready(function () {
 
         $("#" + jugadoresArray[turno].name + "roll").on("click", function () {
             setTimeout(() => {
-                cambiarTurno(rollAgain, animationDuration);
-            }, animationDuration +2005 );
+                cambiarTurno(rollAgain);
+            }, animationDuration + tiempoSegundaAnimacion);
 
 
 
         });
     }
 
-    function cambiarTurno(rollAgain, animationDuration) {
-        // Si rollAgain es verdadero, llamamos a turnos() para que el jugador actual haga un nuevo lanzamiento.
-        // De lo contrario, cambiamos al siguiente jugador.
-        if (rollAgain) {
+    function cambiarTurno(rollAgain) {
 
-            turnos();
+        if (jugadoresArray.length == 0) {
+            var tabla = $('#results').html()
 
+            $('#final').append(
+                '<i id="final-logo" class="fa-solid fa-flag-checkered"></i>'
+            )
+            $('#final').append(tabla)
+            $('#final').append(
+                "<div style='display:flex;justify-content:center;align-items:center;gap:20px'>"+
+                    "<button onclick='location.reload();'><i class='fa-solid fa-arrow-rotate-right'></i> Reiniciar partida</button>"+
+                    "<button onclick='location.reload();'><i class='fa-solid fa-arrow-right-from-bracket'></i> Cambiar jugadores</button>"+
+                "</div>"
+            )
+            $('#wrapper').css('display', 'none')
+            $('#final').css('display', 'flex')
         } else {
-            if (turno == jugadoresArray.length - 1) {
+            // Si rollAgain es verdadero, llamamos a turnos() para que el jugador actual haga un nuevo lanzamiento.
+            // De lo contrario, cambiamos al siguiente jugador.
+            if (rollAgain) {
+
+                turnos();
+
+            } else if (rollAgain && turno == jugadoresArray.length - 1) {
                 turno = 0;
-            } else {
-                turno++;
+                turnos();
             }
-            // Una vez que se ha decidido el próximo turno, llamamos a turnos() para que el nuevo jugador pueda lanzar los dados.
+            
+            else {
+                if (turno == jugadoresArray.length - 1) {
+                    turno = 0;
+                } else {
+                    turno++;
+                }
+                // Una vez que se ha decidido el próximo turno, llamamos a turnos() para que el nuevo jugador pueda lanzar los dados.
 
-            turnos();
+                turnos();
 
 
+            }
         }
-    }
-});
 
+    }
+    
 function rotarImagen() {
     $('.dice img').animate({
         deg: 360 // Rotar 360 grados
@@ -620,6 +662,26 @@ function rotarImagen() {
         complete: rotarImagen // Llama a la función de nuevo al finalizar la animación
     });
 }
+$('#normal').click(function(){
+    animacioncasilla = 700
+    animacioncierre = 200
+    tiempoPrimeraAnimacion = 200
+    tiempoSegundaAnimacion = 1500
+})
+$('#fast').click(function(){
+    animacioncasilla = 700*0.5
+    animacioncierre = 200*0.5
+    tiempoPrimeraAnimacion = 200*0.5
+    tiempoSegundaAnimacion = 1500*0.5
+})
+$('#super-fast').click(function(){
+    animacioncasilla = 700*0.15
+    animacioncierre = 200*0.15
+    tiempoPrimeraAnimacion = 200*0.15
+    tiempoSegundaAnimacion = 1500*0.15
+})
+});
+
 
 
 
