@@ -73,6 +73,10 @@ body {
 
     
 }
+
+label {
+    cursor: pointer;
+}
 #iniciar {
     background-color: white;
     display: flex;
