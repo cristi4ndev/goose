@@ -1,17 +1,16 @@
-// Clase para crear jugadores
-export class Player {
-    constructor(name, image, character,casillas) {
+ // Clase para crear jugadores
+ export class Player {
+    constructor(name, image, character,) {
         this.name = name,
-        this.position = 0,
-        this.character = character,
-        this.image = image,
-        this.movs_number = 0
+            this.position = 0,
+            this.character = character,
+            this.image = image,
+            this.movs_number = 0
         this.tiradas = 0
-        this.casillas = casillas
 
     }
 
-    Move(n, reroll = false, death = false) {
+    Move(n, reroll = false, casillas,animacioncasilla,animacioncierre) {
         //Esta variable la devolveremos en el return para calcular cuánto dura la animación de mover la ficha
         var tiempoAnimacion = 0
         // En el caso que se vuelva a tirar, pasaremos directamente el numero de casilla en lugar de la tirada,
@@ -43,33 +42,7 @@ export class Player {
             reroll = false
             this.position = n
 
-        } else if (death == true) {
-            tiempoAnimacion = animacioncasilla
-            var coords = casillas[n]
-            var self = this
-
-            // Si es rectángulo
-            if (coords.length == 4) {
-                var centroids = calculateRectangleCentroid(coords);
-            } else {//si es polígono
-                var centroids = calculatePolygonCentroid(coords);
-            }
-            $('#ficha' + this.name).animate({
-                left: centroids[0] - 15,
-                top: centroids[1] - 15,
-                scale: 3
-            }, {
-                duration: animacioncasilla,
-                complete: function () {
-                    $('#ficha' + self.name).animate({
-                        scale: 1
-                    }, animacioncierre)
-                }
-            });
-            //Actualizamos el reroll a false y la posición actual
-            reroll = false
-            this.position = n
-        } else {
+        }else {
             var self = this
             //Si la tirada supera el número de casillas, avanza hacia atrás
             if (this.position + n > 62) {
@@ -127,9 +100,10 @@ export class Player {
                 this.position = i + 1
 
             } else {
-
+                
                 for (var i = this.position; i < this.position + n; i++) {
                     this.movs_number++
+                 
                     var coords = casillas[i + 1]
                     tiempoAnimacion += animacioncasilla
                     // Guardamos una referencia al objeto actual
