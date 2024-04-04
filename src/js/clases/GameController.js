@@ -16,6 +16,7 @@ export class GameController {
         this.dice = new Dice()
 
     }
+
     seleccionJugadores() {
         var players = $('#players')[0].value
         switch (players) {
@@ -97,9 +98,10 @@ export class GameController {
                 break;
         }
     }
-    crearJugadores(jugadores) {
+    pintarJugadores(jugadores) {
         var separador = 0
         var jugadoresArray = []
+        //Recorremos el array de jugadores
         jugadores.forEach(jugador => {
             $('#player-turns').append(
                 "<div class='player' id='" + jugador.nombre + "'>" +
@@ -184,10 +186,8 @@ export class GameController {
         return jugadoresArray
     }
 
-    turnos(jugadoresArray, dice) {
-        console.log(jugadoresArray)
-
-        var self = this
+    turnos(jugadoresArray) {
+        var self = this // Varaible para mantener el contexto de clase
         var rollAgain = false; //Variable para saber si es necesario volver a tirar
         var animationDuration = 0; //Variable que captura la duración de la animación del movimiento
 
@@ -198,9 +198,8 @@ export class GameController {
         $("#" + jugadoresArray[self.turno].name + "roll").css('visibility', 'visible')
         $("#" + jugadoresArray[self.turno].name + "dice").css("visibility", "visible");
 
-
         $("#" + jugadoresArray[self.turno].name + "roll").off().click(function () {
-            var tirada = dice.roll();
+            var tirada = self.dice.roll();
             $("#" + jugadoresArray[self.turno].name + "roll").css('visibility', 'hidden')
             $("#tirada" + jugadoresArray[self.turno].name).empty().append("<p>" + tirada + "</p>");
             $("#tirada" + jugadoresArray[self.turno].name).css("visibility", "visible");
@@ -225,7 +224,7 @@ export class GameController {
                         $('#ficha' + jugadoresArray[self.turno].name).hide()
                         $('#results').css('visibility', 'visible')
                         $("#" + jugadoresArray[self.turno].name + "roll").css('visibility', 'hidden')
-                        $("tbody").append(
+                        $("#clasificacion").append(
                             "<tr>" +
                             "<td>" + self.posicion + "</td>" +
                             "<td>" + jugadoresArray[self.turno].name + "</td>" +
@@ -293,8 +292,8 @@ export class GameController {
                             $('#ficha' + jugadoresArray[self.turno].name).hide()
                             $('#results').css('visibility', 'visible')
                             $("#" + jugadoresArray[self.turno].name + "roll").css('visibility', 'hidden')
-                            $("tbody").append(
-                                "<tr>" +
+                            $("#clasificacion").append(
+                                "<tr class='finish-row'>" +
                                 "<td>" + self.posicion + "</td>" +
                                 "<td>" + jugadoresArray[self.turno].name + "</td>" +
                                 "<td><img src='" + jugadoresArray[self.turno].image + "'></td>" +
@@ -304,9 +303,10 @@ export class GameController {
 
                             )
                             jugadoresArray.splice(self.turno, 1)
-                            if (jugadoresArray[self.turno] === jugadoresArray.length - 1) {
+                            if (self.turno === jugadoresArray.length || self.turno === jugadoresArray.length - 1) {
                                 rollAgain = false
                             }
+                            
 
 
                         }
@@ -414,5 +414,29 @@ export class GameController {
             }
         }
 
+    }
+    reiniciar(jugadores){
+        // Reiniciamos las propiedades de clase
+        this.turno = 0
+        this.posicion = 0
+        
+        //Eliminamos el pintado de los jugadores, sus fichas y las tablas de clasificación
+        $('#player-turns').empty();
+        $('#final').empty();
+        $('.moving-image').remove();
+        $('.finish-row').remove();
+
+        // Volvemos a crear jugadores físicamente en el tablero
+        var jugadoresArray = []
+        jugadoresArray = this.pintarJugadores(jugadores)
+        
+        // Gestionamos las diferentes vistas que pueden estar activas
+        $('#wrapper').css('display', 'flex')
+        $('#iniciar').css('display', 'none')
+        $('#final').css('display', 'none')
+        $('#results').css('visibility', 'hidden')
+                
+        // Llamamos al método turnos que se encarga de la lógica de juego
+        this.turnos(jugadoresArray)        
     }
 }

@@ -251,36 +251,7 @@ button {
     align-items: center;
 }
 
-#reglas{
-    background-color: rgb(240, 240, 240);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    
-}
-#reglas >div>div {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background-color: rgb(46, 46, 46);
-    color: white;
-    list-style-type: none;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    font-size: 20px;
-    width: 100%;
-    
-}
 
-#reglas h2{
-    font-size: 36px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-}
 
 #final{
     display: none;
@@ -335,3 +306,4 @@ table img {
     border-radius: 5px;
 }
 
+/* reglas*/

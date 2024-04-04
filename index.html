@@ -276,15 +276,16 @@
         <div id="controls">
           <fieldset>
             <legend>Velocidad</legend>
-            <button id="normal"><i class="fa-solid fa-gauge"></i> Normal</button>
+            <button style="background-color:#ba0a0a;" id="normal"><i class="fa-solid fa-gauge"></i> Normal</button>
             <button id="fast"><i class="fa-solid fa-gauge-high"></i> Rápido</button>
             <button id="super-fast"><i class="fa-solid fa-rocket"></i> Super Rápido</button>
           </fieldset>
           <fieldset>
             <legend>Controles</legend>
-          <button class="reiniciar"><i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar partida</button>
-          <button onclick="location.reload();"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cambiar jugadores</button>
-        </fieldset>
+            <button class="reiniciar"><i class="fa-solid fa-arrow-rotate-right"></i> Reiniciar partida</button>
+            <button onclick="location.reload();"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cambiar
+              jugadores</button>
+          </fieldset>
         </div>
       </div>
     </div>
@@ -293,23 +294,39 @@
     <div id="stats">
 
       <div id="reglas">
-        <h2> <i class="fa-solid fa-circle-exclamation"></i>Reglas</h2>
-        <div style="list-style-type:  decimal;">
-          <div><i class="fa-solid fa-1"></i> ¡De oca en oca y tiro porque me toca!</div>
-          <div><i class="fa-solid fa-2"></i> ¡De puente a puente y tiro porque me lleva la corriente!</div>
-          <div><i class="fa-solid fa-3"></i> ¡Cuidado! Si caes en la casilla 58 te llevará al principio</div>
-        </div>
+
+        <table style="list-style-type:  decimal;">
+          <tr>
+            <th><i class="fa-solid fa-circle-exclamation"></i> Reglas</th>
+          </tr>
+          <tr>
+            <td><i class="fa-solid fa-kiwi-bird"></i> ¡De oca en oca y tiro porque me toca!</td>
+          </tr>
+          <tr>
+            <td><i class="fa-solid fa-bridge"></i> ¡De puente a puente y tiro porque me lleva la corriente!</td>
+          </tr>
+          <tr>
+            <td><i class="fa-solid fa-dice"></i> Si caes en un dado, ¡Vuelves a tirar!</td>
+          </tr>
+          <tr>
+            <td><i class="fa-solid fa-skull"></i> ¡Cuidado! Si caes en la casilla 58 te llevará al principio</td>
+          </tr>
+
+
+        </table>
       </div>
       <div id="results">
         <h2>Clasificación</h2>
         <table>
-          <tr>
-            <th>Posición</th>
-            <th>Jugador</th>
-            <th>Personaje</th>
-            <th>nº Tiradas</th>
-            <th>Nº Movimientos</th>
-          </tr>
+          <tbody id="clasificacion">
+            <tr>
+              <th>Posición</th>
+              <th>Jugador</th>
+              <th>Personaje</th>
+              <th>nº Tiradas</th>
+              <th>Nº Movimientos</th>
+            </tr>
+          </tbody>
 
 
         </table>
