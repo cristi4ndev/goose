@@ -24,36 +24,24 @@ var jugadores = []
 var jugadoresArray = []
 // Creación del controlador de juego
 var controlador = new GameController(casillas,animacioncasilla,animacioncierre,ocas,rerolls,bridges,death,tiempoPrimeraAnimacion,tiempoSegundaAnimacion)
-// Creación de la instancia de clase dado para hacer las tiradas
-
-
-
 
 $(document).ready(function () {
-    // Configuración de inicio de la partida
+    // Dejamos visible solo el div de la creación de jugadores
     $('#wrapper').css("display", "none")
     $('#iniciar').css("display", "flex")
     // Creación de la vista de selección de jugadores
     $('#players-button').click(function () {
         controlador.seleccionJugadores()
     }) 
-    //Creación de jugadores en base a los datos proporcionados en la configuración de partida
+    //Creación de jugadores en base a los datos proporcionados en la configuración de partida al dar click a "comenzar"
     $('#start-game').click(function (event) {
         // Anulamos el comportamiento por defecto del botón
         event.preventDefault();
-        // Recorremos los inputs para tomar sus  valores para añadirlos al array "jugadores"
-        $('.player-edition').each(function () {
-            // Verificar si el fieldset padre está oculto para no contarlo
-            if (!$(this).closest('fieldset').is(':hidden')) {
-                var jugador = {};
-                jugador.nombre = $(this).find('.player-name-edit input').val();
-                jugador.personajeurl = $(this).find('input[type="radio"]:checked').val();
-                jugador.personaje = $(this).find('input[type="radio"]:checked').attr('character');
-                jugadores.push(jugador);
-            }
-        });
         
-        // Crear jugadores físicamente en el tablero
+        //Capturamos los datos
+        jugadores = controlador.capturarDatos();
+
+        // Crear jugadores físicamente en el tablero y guardarlos en el array jugadoresArray
         jugadoresArray = controlador.pintarJugadores(jugadores)
         
         $('#wrapper').css('display', 'flex')

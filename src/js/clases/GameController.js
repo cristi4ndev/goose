@@ -98,6 +98,22 @@ export class GameController {
                 break;
         }
     }
+
+    capturarDatos(){
+        var jugadores = []
+        // Recorremos los inputs para tomar sus  valores para añadirlos al array "jugadores"
+        $('.player-edition').each(function () {
+            // Verificar si el fieldset padre está oculto para no contarlo
+            if (!$(this).closest('fieldset').is(':hidden')) {
+                var jugador = {};
+                jugador.nombre = $(this).find('.player-name-edit input').val();
+                jugador.personajeurl = $(this).find('input[type="radio"]:checked').val();
+                jugador.personaje = $(this).find('input[type="radio"]:checked').attr('character');
+                jugadores.push(jugador);
+            }
+        });
+        return jugadores
+    }
     pintarJugadores(jugadores) {
         var separador = 0
         var jugadoresArray = []
@@ -130,7 +146,7 @@ export class GameController {
                 "<div id='puente" + jugador.nombre + "' class='bocadillo' >" +
                 "<div class='triangulo'></div>" +
                 "<div class='rectangulo'>" +
-                "<img src='./public/images/" + jugador.personaje + "/puente.jpg'>" +
+                "<img src='./public/images/" + jugador.personaje + "/happy.jpg'>" +
                 "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>" +
                 "<h2 style='margin:0'>¡De Puente a Puente!</h2>" +
                 "<span>y tiro porque me lleva la corriente</span>" +
@@ -140,7 +156,7 @@ export class GameController {
                 "<div id='oca" + jugador.nombre + "' class='bocadillo' >" +
                 "<div class='triangulo'></div>" +
                 "<div class='rectangulo'>" +
-                "<img src='./public/images/" + jugador.personaje + "/puente.jpg'>" +
+                "<img src='./public/images/" + jugador.personaje + "/happy.jpg'>" +
                 "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>" +
                 "<h2 style='margin:0'>¡De Oca a OCa!</h2>" +
                 "<span>y tiro porque me toca</span>" +
@@ -160,7 +176,7 @@ export class GameController {
                 "<div id='dados" + jugador.nombre + "' class='bocadillo' >" +
                 "<div class='triangulo'></div>" +
                 "<div class='rectangulo'>" +
-                "<img src='./public/images/" + jugador.personaje + "/puente.jpg'>" +
+                "<img src='./public/images/" + jugador.personaje + "/happy.jpg'>" +
                 "<div style='display:flex;justify-content:center;flex-direction:column;align-items:center'>" +
                 "<h2 style='margin:0'>¡Otra Tirada!</h2>" +
                 "<span>tengo otro turno para tirar</span>" +

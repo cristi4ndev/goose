@@ -2,10 +2,10 @@
  export class Player {
     constructor(name, image, character,) {
         this.name = name,
-            this.position = 0,
-            this.character = character,
-            this.image = image,
-            this.movs_number = 0
+        this.position = 0,
+        this.character = character,
+        this.image = image,
+        this.movs_number = 0
         this.tiradas = 0
 
     }
